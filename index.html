@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+  
+  <title>Frontend Mentor | Contact form</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <div class="layout">
+    <div class="container">
+      <div id="success" class="successContainer">
+        <div class="success">
+          <h3>
+            Message Sent!
+          </h3>
+          Thanks for completing the form. We'll be in touch soon!
+        </div>
+      </div>
+      <div class="heading">
+        Contact Us
+      </div>
+      <div class="name">
+        <form>
+          <label>First Name</label>
+          <input id="input1" type="text">
+          <div id="errorOutput1" class="errorReturn"></div>
+        </form>
+        <form>
+          <label>Last Name</label>
+          <input id="input2" type="text">
+          <div id="errorOutput2" class="errorReturn"></div>
+        </form>
+      </div>
+      <div class="email">
+        <form>
+          <label>Email Address</label>
+          <input id="input3" type="email">
+          <div id="errorOutput3" class="errorReturn"></div>
+        </form>
+      </div>
+      <div class="query">
+        <label>Query Type</label>
+        <form class="queryForm">
+          <div class="cbcontainer">
+            <input id="checkbox1" type="checkbox" class="cb1 allcb trans">
+            <span class="bg1 bgt1"></span>
+          </div>
+          <div class="cbcontainer">
+            <input id="checkbox2" type="checkbox" class="cb2 allcb trans">
+            <span class="bg1 bgt2"></span>
+          </div>
+        </form>
+        <div id="errorOutput4" class="errorReturn"></div>
+      </div>
+      <div class="msgReq">
+        <label for="textArea">Message</label>
+        <textarea id="input4" class="textarea class"></textarea>
+        <div id="errorOutput5" class="errorReturn"></div>
+      </div>
+      <div class="checkbox">
+        <diV class="inCheckbox">
+        <input id="checkbox3" type="checkbox" class="icheckbox">
+        <label for="checkbox">I consent to being contacted by the team</label>
+        </diV>
+        <div id="errorOutput6" class="errorReturn"></div>
+      </div>
+      
+      <div class="submit">
+        <button id="submitBtn" class="submitBtn">
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+const checkbox1 = document.getElementById("checkbox1");
+const checkbox2 = document.getElementById("checkbox2");
+const checkbox3 = document.getElementById("checkbox3");
+const submit = document.getElementById("submitBtn");
+const firstName = document.getElementById("input1");
+const lastName = document.getElementById("input2");
+const email = document.getElementById("input3");
+const textarea = document.getElementById("input4");
+const emailPattern =  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+let isValid = false;
+let validChar = /^[a-zA-Z]+$/;
+let validValues = 0;
+let interval;
+let element = document.getElementById("success");
+const fltErrorMsg = "This field is required"
+const eErrorMsg = "Please enter a valid email address"
+let timerValue = 0;
+//prevent multiple selecting query
+checkbox1.onclick = function() {
+  checkbox2.checked = false
+}
+checkbox2.onclick = function() {
+  checkbox1.checked = false
+}
+submit.onclick = function() {
+  //check if the email input value is valid, return boolean
+  isValid = emailPattern.test(email.value)
+  //reset validValues everytime submit button is clicked
+  validValues = 0;
+  //check if firstname is valid, if it is valid add 1 validValues
+  if (!validChar.test(firstName.value)) {
+    errorBorder(1, "rgb(246, 61, 61)");
+    errorOuput(1, fltErrorMsg)
+  }else if (validChar.test(firstName.value)) {
+    validValues++;
+    reset(1, 1)
+    errorBorder(1)
+  };
+  //same as above
+  if (!validChar.test(lastName.value)) {
+    errorBorder(2, "rgb(246, 61, 61)");
+    errorOuput(2, fltErrorMsg)
+  }else if (validChar.test(lastName.value)) {
+    validValues++;
+    reset(2, 2)
+    errorBorder(2)
+  };
+  //same as above
+  if (!emailPattern.test(email.value)) {
+    errorBorder(3, "rgb(246, 61, 61)");
+    errorOuput(3, eErrorMsg)
+  }else if (emailPattern.test(email.value)) {
+    validValues++;
+    reset(3, 3)
+    errorBorder(3)
+  };
+  // check if one of the query is selected, return an error message if none of the query is seleced,
+  // if selected add 1 validValues
+  if (checkbox1.checked == false && checkbox2.checked == false) {
+    let errormsg1 = "Please select a query type";
+    errorOuput(4, errormsg1)
+  }else if (checkbox1.checked == true || checkbox2.checked == true) {
+    validValues++;
+    reset(4, 4)
+  };
+  //same as a bove
+  if (!validChar.test(textarea.value)) {
+    errorBorder(4, "rgb(246, 61, 61)")
+    errorOuput(5, fltErrorMsg)
+  } else if (validChar.test(textarea.value)) {
+    validValues++;
+    reset(5, 4)
+  };
+  //same as above
+  if (checkbox3.checked == false) {
+    let errormsg2 = "To submit this form, please consent to being contacted";
+    errorOuput(6, errormsg2)
+  } else if (checkbox3.checked == true) {
+    validValues++;
+    reset(6, 4)
+  }
+  //if the validvalues reach 6(meaning all form are valid) success message will pop up
+  if (validValues == 6) {
+    element.classList.add("successContainerToggle")
+    //start the timer
+    interval = setInterval(startTimer, 1000)
+  };
+}
+//set the border color to red if the input value is not valid
+function errorBorder(value, color) {
+  document.getElementById("input" + value).style.borderColor = color;
+}
+//give an error message if the input value is not valid
+function errorOuput(value, output) {
+  document.getElementById("errorOutput" + value).innerHTML = output;
+}
+//reset error messages if the input value is valid
+function reset(value1, value2) {
+  errorOuput(value1, null)
+  errorBorder(value2, "rgb(93, 93, 93)")
+}
+function startTimer() {
+  timerValue++;
+  //reset timerValue after 5s
+  while (timerValue > 5) {
+  element.classList.remove("successContainerToggle")
+  timerValue = 0;
+  clearInterval(interval)
+  }
+}
+
+</script>
+</body>
+</html>
