@@ -23,18 +23,6 @@
         flex-direction: column;
         align-items: flex-start;
       }
-      .marginr {
-        margin-right: 25px;
-      }
-      .marginl {
-        margin-left: 25px;
-      }
-      .margint {
-        margin-top: 25px;
-      }
-      .marginb {
-        margin-bottom: 25px;
-      }
       .heading {
         margin-top: 20px;
         margin-left: 20px;
